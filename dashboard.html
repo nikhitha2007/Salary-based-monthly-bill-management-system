@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Finance Dashboard</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+display:flex;
+background:#eef1f6;
+}
+
+/* Sidebar */
+
+.sidebar{
+width:230px;
+background:#1f2a44;
+color:white;
+height:100vh;
+padding:25px;
+}
+
+.sidebar h2{
+text-align:center;
+margin-bottom:30px;
+}
+
+.sidebar button{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:none;
+border-radius:6px;
+cursor:pointer;
+background:#2e3a5c;
+color:white;
+font-weight:bold;
+}
+
+.sidebar button:hover{
+background:#3f4f75;
+}
+
+/* Main */
+
+.main{
+flex:1;
+padding:35px;
+}
+
+/* Cards */
+
+.card{
+background:white;
+padding:22px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.08);
+margin-bottom:20px;
+}
+
+/* Inputs */
+
+input{
+padding:10px;
+margin:6px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+/* Buttons */
+
+.actionBtn{
+background:#3a7afe;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.actionBtn:hover{
+background:#2e63d6;
+}
+
+/* Table */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+background:white;
+}
+
+th{
+background:#3a7afe;
+color:white;
+padding:12px;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+/* Sections */
+
+.section{
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>💰 Finance</h2>
+
+<button onclick="showSection('dashboard')">Dashboard</button>
+<button onclick="showSection('salary')">Salary</button>
+<button onclick="showSection('bills')">Bills</button>
+<button onclick="showSection('safe')">Safe To Spend</button>
+<button onclick="showSection('reminders')">Reminders</button>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+
+<div class="main">
+
+<h2>Welcome, <span id="userName"></span></h2>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="section">
+
+<div class="card">
+<h3>Salary</h3>
+<p>₹ <span id="salaryDisplay">0</span></p>
+</div>
+
+<div class="card">
+<h3>Total Bills</h3>
+<p>₹ <span id="totalBills">0</span></p>
+</div>
+
+<div class="card">
+<h3>Safe To Spend</h3>
+<p>₹ <span id="safeSpend">0</span></p>
+</div>
+
+</div>
+
+
+<!-- SALARY -->
+
+<div id="salary" class="section">
+
+<div class="card">
+
+<h3>Update Monthly Salary</h3>
+
+<input type="number" id="salaryInput" placeholder="Enter Salary">
+
+<button class="actionBtn" onclick="setSalary()">Save Salary</button>
+
+</div>
+
+</div>
+
+
+<!-- BILLS -->
+
+<div id="bills" class="section">
+
+<div class="card">
+
+<h3>Add Bill</h3>
+
+<input type="text" id="billName" placeholder="Bill Name">
+<input type="number" id="billAmount" placeholder="Amount">
+<input type="date" id="billDate">
+
+<button class="actionBtn" onclick="addBill()">Add Bill</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>Bill List</h3>
+
+<table id="billTable">
+
+<tr>
+<th>Name</th>
+<th>Amount</th>
+<th>Date</th>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- SAFE TO SPEND -->
+
+<div id="safe" class="section">
+
+<div class="card">
+
+<h3>Safe Amount To Spend This Month</h3>
+
+<p>₹ <span id="safeSpend2">0</span></p>
+
+</div>
+
+</div>
+
+
+<!-- REMINDERS -->
+
+<div id="reminders" class="section">
+
+<div class="card">
+
+<h3>⚠ Bill Alerts</h3>
+
+<ul id="reminderList"></ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* Sidebar navigation */
+
+function showSection(id){
+
+document.querySelectorAll(".section").forEach(sec=>{
+sec.style.display="none";
+});
+
+document.getElementById(id).style.display="block";
+
+}
+
+
+/* Salary */
+
+function setSalary(){
+
+let user=localStorage.getItem("currentUser");
+
+let salary=document.getElementById("salaryInput").value;
+
+localStorage.setItem("salary_"+user,salary);
+
+document.getElementById("salaryDisplay").innerText=salary;
+
+updateSummary();
+
+}
+
+
+/* Add Bill */
+
+function addBill(){
+
+let user=localStorage.getItem("currentUser");
+
+let name=document.getElementById("billName").value;
+let amount=document.getElementById("billAmount").value;
+let date=document.getElementById("billDate").value;
+
+let bills=JSON.parse(localStorage.getItem("bills_"+user))||[];
+
+bills.push({name,amount,date});
+
+localStorage.setItem("bills_"+user,JSON.stringify(bills));
+
+displayBills();
+
+}
+
+
+/* Display Bills */
+
+function displayBills(){
+
+let user=localStorage.getItem("currentUser");
+
+let bills=JSON.parse(localStorage.getItem("bills_"+user))||[];
+
+let table=document.getElementById("billTable");
+
+table.innerHTML=`<tr>
+<th>Name</th>
+<th>Amount</th>
+<th>Date</th>
+</tr>`;
+
+let total=0;
+
+let reminderList=document.getElementById("reminderList");
+
+reminderList.innerHTML="";
+
+let today=new Date();
+
+bills.forEach(bill=>{
+
+let due=new Date(bill.date);
+
+let diff=Math.floor((due-today)/(1000*60*60*24));
+
+let row=table.insertRow();
+
+row.insertCell(0).innerText=bill.name;
+row.insertCell(1).innerText="₹ "+bill.amount;
+row.insertCell(2).innerText=bill.date;
+
+total+=Number(bill.amount);
+
+/* highlight overdue bill */
+
+if(diff<0){
+row.style.background="#ffe5e5";
+}
+
+/* reminders */
+
+let li=document.createElement("li");
+
+if(diff<0){
+
+li.innerText=bill.name+" is OVERDUE by "+Math.abs(diff)+" days";
+li.style.color="red";
+reminderList.appendChild(li);
+
+}
+
+else if(diff<=7){
+
+li.innerText=bill.name+" due in "+diff+" days";
+li.style.color="orange";
+reminderList.appendChild(li);
+
+}
+
+});
+
+if(reminderList.innerHTML===""){
+reminderList.innerHTML="<li>No urgent bills</li>";
+}
+
+document.getElementById("totalBills").innerText=total;
+
+updateSummary();
+
+}
+
+
+/* Summary */
+
+function updateSummary(){
+
+let user=localStorage.getItem("currentUser");
+
+let salary=Number(localStorage.getItem("salary_"+user))||0;
+
+let bills=JSON.parse(localStorage.getItem("bills_"+user))||[];
+
+let total=0;
+
+bills.forEach(b=>total+=Number(b.amount));
+
+let safe=salary-total;
+
+document.getElementById("safeSpend").innerText=safe;
+document.getElementById("safeSpend2").innerText=safe;
+
+}
+
+
+/* Logout */
+
+function logout(){
+
+localStorage.removeItem("currentUser");
+
+window.location.href="index.html";
+
+}
+
+
+/* Page load */
+
+window.onload=function(){
+
+let user=localStorage.getItem("currentUser");
+
+if(!user){
+window.location.href="index.html";
+return;
+}
+
+document.getElementById("userName").innerText=user;
+
+let salary=localStorage.getItem("salary_"+user)||0;
+
+document.getElementById("salaryDisplay").innerText=salary;
+
+displayBills();
+
+showSection("dashboard");
+
+}
+
+</script>
+
+</body>
+</html>

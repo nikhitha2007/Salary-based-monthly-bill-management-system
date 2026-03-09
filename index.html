@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Salary Based Monthly Bill Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            background-color:#f4f6f9;
+        }
+
+        nav{
+            background-color:#1e3a8a;
+            padding:15px 50px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            color:white;
+        }
+
+        nav a{
+            color:white;
+            text-decoration:none;
+            margin-left:20px;
+            font-weight:bold;
+        }
+
+        nav a:hover{
+            text-decoration:underline;
+        }
+
+        .hero{
+            height:90vh;
+            background:url('https://images.unsplash.com/photo-1554224155-6726b3ff858f') no-repeat center center/cover;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            color:white;
+        }
+
+        .hero-content{
+            background:rgba(0,0,0,0.6);
+            padding:40px;
+            border-radius:10px;
+        }
+
+        .hero h1{
+            font-size:45px;
+            margin-bottom:20px;
+        }
+
+        .hero p{
+            font-size:18px;
+            margin-bottom:25px;
+        }
+
+        .btn{
+            padding:12px 20px;
+            margin:5px;
+            border:none;
+            cursor:pointer;
+            border-radius:5px;
+            font-size:16px;
+        }
+
+        .primary{
+            background-color:#22c55e;
+            color:white;
+        }
+
+        .secondary{
+            background-color:#2563eb;
+            color:white;
+        }
+
+        .features{
+            padding:60px 50px;
+            text-align:center;
+        }
+
+        .features h2{
+            margin-bottom:30px;
+            color:#1e3a8a;
+        }
+
+        .feature-container{
+            display:flex;
+            justify-content:space-around;
+            flex-wrap:wrap;
+        }
+
+        .card{
+            background:white;
+            width:30%;
+            padding:25px;
+            margin:15px;
+            border-radius:10px;
+            box-shadow:0px 5px 15px rgba(0,0,0,0.1);
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-10px);
+        }
+
+        .card img{
+            width:80px;
+            margin-bottom:15px;
+        }
+
+        .about{
+            padding:50px;
+            background-color:#e0f2fe;
+            text-align:center;
+        }
+
+        .steps{
+            padding:50px;
+            text-align:center;
+        }
+
+        .steps img{
+            width:300px;
+            margin-top:20px;
+            border-radius:10px;
+        }
+
+        footer{
+            background-color:#1e3a8a;
+            color:white;
+            text-align:center;
+            padding:20px;
+            margin-top:30px;
+        }
+
+        @media(max-width:900px){
+            .card{
+                width:80%;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>BillManager</h2>
+    <div>
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="#" onclick="goToLogin()">Login</a>
+    </div>
+</nav>
+
+<section class="hero" id="home">
+    <div class="hero-content">
+        <h1>Salary Based Monthly Bill Management</h1>
+        <p>Manage your salary smartly. Track expenses. Never miss a bill payment again.</p>
+
+        <button class="btn primary" onclick="startApp()">Get Started</button>
+        <button class="btn secondary" onclick="goToLogin()">Login</button>
+    </div>
+</section>
+
+<section class="features" id="features">
+
+    <h2>Our Key Features</h2>
+
+    <div class="feature-container">
+
+        <div class="card">
+            <img src="https://cdn-icons-png.flaticon.com/512/2331/2331943.png">
+            <h3>Salary Allocation</h3>
+            <p>Automatically divide your salary for essential monthly bills.</p>
+        </div>
+
+        <div class="card">
+            <img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png">
+            <h3>Bill Reminders</h3>
+            <p>Get smart reminders before due dates and avoid penalties.</p>
+        </div>
+
+        <div class="card">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135679.png">
+            <h3>Monthly Reports</h3>
+            <p>Generate expense summaries and analyze your spending habits.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="about" id="about">
+
+    <h2>About This Project</h2>
+
+    <p>
+        This web application helps users estimate their monthly expenses
+        based on salary input and track all essential bills including rent,
+        electricity, gas, internet and more.
+    </p>
+
+</section>
+
+<section class="steps">
+
+    <h2>How It Works</h2>
+
+    <p>1. Enter Salary → 2. Add Bills → 3. View Summary → 4. Track Expenses</p>
+
+    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40">
+
+</section>
+
+<footer>
+
+    <p>© 2026 Salary Based Monthly Bill Management System</p>
+    <p>Developed by Nikhitha Gondi | CSE Department</p>
+
+</footer>
+
+<script>
+
+function startApp(){
+    window.location.href="login.html";
+}
+
+function goToLogin(){
+    window.location.href="login.html";
+}
+
+</script>
+
+</body>
+</html>
